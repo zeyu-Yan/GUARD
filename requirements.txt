@@ -1,0 +1,19 @@
+# Core training stack
+torch>=2.1
+transformers>=4.40
+accelerate>=0.29
+peft>=0.10
+safetensors>=0.4
+datasets>=2.19
+
+# Tokenization and model loading
+tokenizers>=0.15
+sentencepiece>=0.1.99
+protobuf>=4.25
+huggingface-hub>=0.22
+
+# Data/config utilities
+numpy>=1.23
+pyyaml>=6.0
+pyarrow>=15.0
+packaging>=23.0

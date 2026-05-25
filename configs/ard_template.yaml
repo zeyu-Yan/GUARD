@@ -1,0 +1,76 @@
+# GUARD phase 3: Answer-Reasoning Distillation (ARD)
+model_path: models/base-lrm
+
+forget_path: data/forget.json
+retain_path: data/retain.json
+retain_extra_forget_path: ""
+retain_extra_exclude_task_id: ""
+# Replace with the selected GTA checkpoint, e.g. prefix_epoch20.pt.
+prefix_path: outputs/gta_runs/guard_gta_main/prefix_final.pt
+prefix_position: prompt_end
+
+output_root: outputs/ard_runs
+run_name: guard_ard_main
+output_dir: outputs/ard_runs/guard_ard_main
+trajectory_cache: outputs/cache/ard_teacher_trajectories.jsonl
+force_rebuild_trajectories: false
+
+task_id: "1"
+forget_limit: 0
+retain_limit: 1800
+retain_sample: random
+max_length: 2560
+skip_too_long: false
+
+question_start: "<｜User｜>"
+question_end: "<｜Assistant｜>"
+think_start: "<think>\n"
+think_end: "\n</think>\n\n"
+answer_tag: ""
+
+device: cuda:0
+dtype: bf16
+seed: 7
+gradient_checkpointing: true
+
+lora_r: 24
+lora_alpha: 48
+lora_dropout: 0.025
+lora_target_modules: all-linear
+
+lr: 6.0e-5
+weight_decay: 0.0
+epochs: 15
+steps_per_epoch: 600
+max_steps: 9000
+warmup_steps: 300
+batch_size: 1
+
+# Methodology default: 1:1 forget/retain mixture.
+forget_updates_per_cycle: 1
+retain_updates_per_cycle: 1
+forget_samples_per_epoch: 300
+retain_samples_per_epoch: 300
+retain_epoch_sample_seed: 1707
+max_grad_norm: 1.0
+
+# Methodology default: both forget and retain streams use the optimized guidance-conditioned teacher.
+retain_teacher_uses_prefix: true
+forget_max_new_tokens: 2048
+retain_max_new_tokens: 2048
+trajectory_generation_batch_size: 20
+distill_objective: trajectory_kl
+kl_token_scope: full_trajectory
+kl_temperature: 1.0
+kl_chunk_tokens: 8
+kl_top_k: 1000
+
+eval_seed: 20260513
+eval_forget_samples: 10
+eval_retain_samples: 10
+eval_max_new_tokens: 2048
+eval_batch_size: 10
+
+log_every: 50
+save_every: 0
+save_epochs: ""

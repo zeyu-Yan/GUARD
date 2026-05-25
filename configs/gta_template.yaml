@@ -1,0 +1,83 @@
+# GUARD phase 2: Guided Trajectory Alignment (GTA)
+# Replace data/model paths with local paths.
+model_path: models/base-lrm
+model_config: configs/model_config.yaml
+model_family: deepseek-r1-style
+
+forget_path: data/forget.json
+retain_path: data/retain.json
+idkcot_path: data/forget_safe_cot.jsonl
+idontknow_path: data/forget_safe_answer.jsonl
+task_id: "1"
+
+forget_limit: 0
+retain_limit: 1800
+retain_sample: random
+retain_sampler: random
+eval_forget_limit: 40
+eval_retain_limit: 40
+
+output_root: outputs/gta_runs
+results_root: outputs/gta_results
+run_name: guard_gta_main
+output_dir: outputs/gta_runs/guard_gta_main
+results_dir: outputs/gta_results/guard_gta_main
+trajectory_cache: outputs/cache/retain_base_trajectories.jsonl
+force_rebuild_trajectories: false
+
+device: cuda:0
+dtype: bf16
+seed: 7
+prefix_len: 48
+prefix_position: prompt_end
+prefix_init: random
+loss_mode: forgetce_retainkl
+
+# Methodology default: equal block-normalized CE for reasoning and boundary-answer.
+lambda_cot_ce: 1.0
+lambda_answer_ce: 1.0
+enforce_equal_forget_block_weights: true
+lambda_retain: 4.0
+kl_topk: 1000
+
+lr: 0.001
+epochs: 30
+steps_per_epoch: 100
+forget_batch_size: 4
+retain_batch_size: 2
+retain_grad_accum_steps: 2
+max_grad_norm: 0.5
+
+max_length: 2560
+max_new_tokens: 2048
+retain_max_new_tokens: 2048
+generation_batch_size: 20
+trajectory_generation_batch_size: 20
+chunk_tokens: 64
+
+eval_every: 0
+eval_start_epoch: 999
+save_epochs: "5,10,15,20,25,30"
+skip_baseline_eval: true
+skip_final_eval: true
+
+score_mode: harmonic_mean
+score_eval_every: 5
+score_eval_start_epoch: 5
+score_sample_n: 50
+score_retain_sample_n: 50
+score_retain_path: ""
+score_retain_limit: 0
+score_retain_sample: head
+score_sample_seed: 20260516
+score_threshold: 0.8
+score_forget_judge_mode: source_leak
+score_retain_mode: generative_judge
+score_judge_base_url: ""
+score_judge_model: ""
+score_judge_api_key_env: GUARD_JUDGE_API_KEY
+score_judge_timeout: 600.0
+score_judge_max_retries: 3
+score_judge_retry_sleep: 10.0
+score_judge_retry_window: 600.0
+score_judge_max_field_chars: 20000

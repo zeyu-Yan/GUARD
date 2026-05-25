@@ -1,0 +1,19 @@
+default-lrm:
+  hf_key: "models/base-lrm"
+  question_start_tag: "<|user|>"
+  question_end_tag: "<|assistant|>"
+  think_start_tag: "<think>\n"
+  think_end_tag: "\n</think>\n\n"
+  answer_tag: ""
+  flash_attention2: "false"
+  gradient_checkpointing: "true"
+
+deepseek-r1-style:
+  hf_key: "models/base-lrm"
+  question_start_tag: "<｜User｜>"
+  question_end_tag: "<｜Assistant｜>"
+  think_start_tag: "<think>\n"
+  think_end_tag: "\n</think>\n\n"
+  answer_tag: ""
+  flash_attention2: "true"
+  gradient_checkpointing: "true"
